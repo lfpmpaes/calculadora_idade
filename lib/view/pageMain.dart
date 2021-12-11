@@ -1,3 +1,5 @@
+import 'package:calculadora_idade/enum/animais.dart';
+import 'package:calculadora_idade/function/funcaoCalculo.dart';
 import 'package:flutter/material.dart';
 
 class PageMain extends StatefulWidget {
@@ -7,30 +9,26 @@ class PageMain extends StatefulWidget {
   _PageMainState createState() => _PageMainState();
 }
 
-enum Animal { gato, cachorro }
-enum Meses {
-  janeiro,
-  fevereiro,
-  marco,
-  abril,
-  maio,
-  junho,
-  julho,
-  agosto,
-  setembro,
-  outubro,
-  novembro,
-  dezembro
-}
-
 class _PageMainState extends State<PageMain> {
   String? mesEscolhido;
   String? anoEscolhido;
   Animal _character = Animal.cachorro;
-  String? IdadeCalculada;
+  String? idadeCalculada;
+  int? indexMesEscolhido;
 
   final List listMeses = [
-    "Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro"
   ];
 
   @override
@@ -39,7 +37,8 @@ class _PageMainState extends State<PageMain> {
     final double height = MediaQuery.of(context).size.height;
 
     final int anoAtual = new DateTime.now().year;
-    final List listAnos= new List<String>.generate(anoAtual-1999, (index) => (2000+index).toString());
+    final List listAnos = new List<String>.generate(
+        anoAtual - 1999, (index) => (2000 + index).toString());
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 114, 146, 207),
@@ -93,11 +92,19 @@ class _PageMainState extends State<PageMain> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         DropdownButton(
-                          hint: Text("MM"),
+                          hint: Text(
+                            "MM",
+                            style: TextStyle(fontSize: 12, color: Colors.black),
+                          ),
                           value: mesEscolhido,
                           onChanged: (newValue) {
                             setState(() {
                               mesEscolhido = newValue.toString();
+                              for (int i = 0; i < 12; i++) {
+                                if (listMeses[i] == newValue.toString()) {
+                                  indexMesEscolhido = i + 1;
+                                }
+                              }
                             });
                           },
                           items: listMeses.map((valueItem) {
@@ -108,11 +115,14 @@ class _PageMainState extends State<PageMain> {
                           }).toList(),
                         ),
                         DropdownButton(
-                          hint: Text("AAAA"),
+                          hint: Text(
+                            "AAAA",
+                            style: TextStyle(fontSize: 12, color: Colors.black),
+                          ),
                           value: anoEscolhido,
                           onChanged: (newValue) {
                             setState(() {
-                                anoEscolhido = newValue.toString();
+                              anoEscolhido = newValue.toString();
                             });
                           },
                           items: listAnos.map((valueItem) {
@@ -178,7 +188,19 @@ class _PageMainState extends State<PageMain> {
                           elevation: MaterialStateProperty.all(2),
                         ),
                         onPressed: () {
-
+                          setState(() {
+                            if (indexMesEscolhido == null ||
+                                anoEscolhido == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("Preencha os dados obrigatórios!"),
+                                backgroundColor: Colors.red,
+                                duration: Duration(seconds: 4),
+                              ));
+                            } else {
+                              idadeCalculada = FuncaoCalculo(_character,
+                                  indexMesEscolhido!, int.parse(anoEscolhido!));
+                            }
+                          });
                         },
                         child: Text(
                           "Calcular",
@@ -190,9 +212,17 @@ class _PageMainState extends State<PageMain> {
                     Divider(color: Colors.transparent, height: 50),
                     Container(
                       alignment: Alignment.center,
-                      child: Text("Idade aqui"),
+                      child: Text(
+                          idadeCalculada == null
+                              ? ""
+                              : idadeCalculada! + " Anos!!",
+                          style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.black87)),
                     ),
-                    Divider(color: Colors.transparent, height: 50),
+                    Divider(color: Colors.transparent, height: 40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [

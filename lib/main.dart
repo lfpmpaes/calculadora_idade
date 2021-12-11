@@ -1,4 +1,4 @@
-import 'package:calculadora_idade/pageMain.dart';
+import 'package:calculadora_idade/view/pageMain.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Calculadora de Idade',
       theme: ThemeData(fontFamily: 'SourceSansPro'),
+      debugShowCheckedModeBanner: false,
       home: PageMain(),
     );
   }
