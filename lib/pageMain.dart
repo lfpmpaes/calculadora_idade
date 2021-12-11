@@ -24,15 +24,22 @@ enum Meses {
 }
 
 class _PageMainState extends State<PageMain> {
+  String? mesEscolhido;
+  String? anoEscolhido;
+  Animal _character = Animal.cachorro;
+  String? IdadeCalculada;
+
+  final List listMeses = [
+    "Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+  ];
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
-    final List listItem = new List<String>.generate(30,(index) => (index+1).toString());
-
-    String? valueComboBox;
-    Animal _character = Animal.cachorro;
+    final int anoAtual = new DateTime.now().year;
+    final List listAnos= new List<String>.generate(anoAtual-1999, (index) => (2000+index).toString());
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 114, 146, 207),
@@ -87,11 +94,13 @@ class _PageMainState extends State<PageMain> {
                       children: [
                         DropdownButton(
                           hint: Text("MM"),
-                          value: valueComboBox,
+                          value: mesEscolhido,
                           onChanged: (newValue) {
-                            setState(() {});
+                            setState(() {
+                              mesEscolhido = newValue.toString();
+                            });
                           },
-                          items: listItem.map((valueItem) {
+                          items: listMeses.map((valueItem) {
                             return DropdownMenuItem(
                               value: valueItem,
                               child: Text(valueItem),
@@ -100,13 +109,13 @@ class _PageMainState extends State<PageMain> {
                         ),
                         DropdownButton(
                           hint: Text("AAAA"),
-                          value: valueComboBox,
+                          value: anoEscolhido,
                           onChanged: (newValue) {
                             setState(() {
-
+                                anoEscolhido = newValue.toString();
                             });
                           },
-                          items: listItem.map((valueItem) {
+                          items: listAnos.map((valueItem) {
                             return DropdownMenuItem(
                               value: valueItem,
                               child: Text(valueItem),
@@ -124,8 +133,10 @@ class _PageMainState extends State<PageMain> {
                             Radio(
                               value: Animal.cachorro,
                               groupValue: _character,
-                              onChanged: (value) {
-                                setState(() {});
+                              onChanged: (Animal? value) {
+                                setState(() {
+                                  _character = value!;
+                                });
                               },
                             ),
                             Text(
@@ -142,8 +153,10 @@ class _PageMainState extends State<PageMain> {
                             Radio(
                               value: Animal.gato,
                               groupValue: _character,
-                              onChanged: (value) {
-                                setState(() {});
+                              onChanged: (Animal? value) {
+                                setState(() {
+                                  _character = value!;
+                                });
                               },
                             ),
                             Text(
@@ -164,7 +177,9 @@ class _PageMainState extends State<PageMain> {
                               Color.fromARGB(255, 150, 177, 229)),
                           elevation: MaterialStateProperty.all(2),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+
+                        },
                         child: Text(
                           "Calcular",
                           style: TextStyle(
