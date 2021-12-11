@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Calculadora de Idade',
-
+      theme: ThemeData(fontFamily: 'SourceSansPro'),
       home: PageMain(),
     );
   }
